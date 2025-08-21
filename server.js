@@ -58,7 +58,7 @@ app.get('/db-health', async (req, res) => {
     await pool.query('SELECT 1');
     res.json({ db: 'up' });
   } catch (err) {
-    res.status(500).json({ db: 'down' });
+    res.status(500).json({ db: 'down', error: err.message.slice(0, 80) });
   }
 });
 
