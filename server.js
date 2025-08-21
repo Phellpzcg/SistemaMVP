@@ -62,7 +62,20 @@ app.get('/db-health', async (req, res) => {
   }
 });
 
+const maskDbUrl = (url) => url ? url.replace(/:\/\/.*@/, '://***@') : '';
+
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Server listening on port ${PORT}`);
-});
+(async () => {
+  const dbUrl = process.env.DATABASE_URL || '';
+  const maskedUrl = maskDbUrl(dbUrl);
+  try {
+    await pool.query('SELECT 1');
+    console.log(`Connected to database ${maskedUrl}`);
+    app.listen(PORT, () => {
+      console.log(`Server listening on port ${PORT}`);
+    });
+  } catch (err) {
+    console.error(`Database connection error for ${maskedUrl}`, err);
+    process.exit(1);
+  }
+})();
