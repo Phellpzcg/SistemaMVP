@@ -2,6 +2,8 @@ const express = require('express');
 const bcrypt = require('bcrypt');
 const pool = require('../db');
 
+function logErr(err) { const msg = (err.message || '').split('\\n')[0]; console.error(err.code || 'ERR', msg); }
+
 const router = express.Router();
 
 // Login endpoint
@@ -38,7 +40,7 @@ router.post('/login', async (req, res) => {
 
     res.json({ message: 'Logged in successfully' });
   } catch (err) {
-    console.error(err);
+    logErr(err);
     res.status(500).json({ message: 'Server error' });
   }
 });

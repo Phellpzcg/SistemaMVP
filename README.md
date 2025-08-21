@@ -1,5 +1,7 @@
 # Sistema MVP
 
+Projeto Node.js + Express utilizando PostgreSQL hospedado na Railway.
+
 ## Configuração
 
 1. Instale as dependências:
@@ -8,10 +10,10 @@
 npm install
 ```
 
-2. Crie um arquivo `.env` na raiz com a URL do banco de dados:
+2. Crie um arquivo `.env` na raiz com a URL do banco de dados PostgreSQL fornecida pelo Railway:
 
 ```
-DATABASE_URL=postgres://usuario:senha@host:porta/banco
+DATABASE_URL=postgresql://usuario:senha@host:porta/banco
 ```
 
 3. Popule o banco de dados:

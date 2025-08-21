@@ -10,13 +10,19 @@ async function run() {
     throw new Error('DATABASE_URL is not set');
   }
 
-  const pool = new Pool({ connectionString });
+  const pool = new Pool({
+    connectionString,
+    ...(process.env.NODE_ENV === 'production'
+      ? { ssl: { rejectUnauthorized: false } }
+      : {}),
+  });
 
   try {
     const migrationPath = path.join(__dirname, '..', 'migrations', '001_init.sql');
     const migration = fs.readFileSync(migrationPath, 'utf8');
+    const { rows } = await pool.query("SELECT to_regclass('public.users') AS exists");
     await pool.query(migration);
-    console.log('migration aplicada');
+    console.log(rows[0].exists ? 'migration já ok' : 'migration aplicada');
 
     const passwordHash = await bcrypt.hash('Admin@123', 10);
     const result = await pool.query(
@@ -27,14 +33,15 @@ async function run() {
     );
 
     if (result.rowCount === 0) {
-      console.log('admin existente');
+      console.log('admin já existia');
     } else {
       console.log('admin criado');
     }
 
     console.log('seed concluído');
   } catch (err) {
-    console.error('Error during seeding:', err);
+    const msg = err.message.split('\n')[0];
+    console.error('Error during seeding:', msg);
   } finally {
     await pool.end();
   }

@@ -58,24 +58,22 @@ app.get('/db-health', async (req, res) => {
     await pool.query('SELECT 1');
     res.json({ db: 'up' });
   } catch (err) {
-    res.status(500).json({ db: 'down', error: err.message.slice(0, 80) });
+    const msg = err.message.split('\n')[0];
+    res.status(500).json({ db: 'down', error: msg });
   }
 });
 
-const maskDbUrl = (url) => url ? url.replace(/:\/\/.*@/, '://***@') : '';
-
 const PORT = process.env.PORT || 3000;
 (async () => {
-  const dbUrl = process.env.DATABASE_URL || '';
-  const maskedUrl = maskDbUrl(dbUrl);
   try {
     await pool.query('SELECT 1');
-    console.log(`Connected to database ${maskedUrl}`);
+    console.log('Conexão PostgreSQL (Railway) OK');
     app.listen(PORT, () => {
       console.log(`Server listening on port ${PORT}`);
     });
   } catch (err) {
-    console.error(`Database connection error for ${maskedUrl}`, err);
+    const msg = err.message.split('\n')[0];
+    console.error(`${err.code || 'DB_ERROR'} ${msg}`);
     process.exit(1);
   }
 })();
