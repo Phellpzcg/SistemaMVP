@@ -16,16 +16,23 @@ async function run() {
     const migrationPath = path.join(__dirname, '..', 'migrations', '001_init.sql');
     const migration = fs.readFileSync(migrationPath, 'utf8');
     await pool.query(migration);
+    console.log('migration aplicada');
 
     const passwordHash = await bcrypt.hash('Admin@123', 10);
-    await pool.query(
+    const result = await pool.query(
       `INSERT INTO users (name, email, password_hash, role, is_active)
        VALUES ($1, $2, $3, $4, $5)
        ON CONFLICT (email) DO NOTHING`,
       ['Admin', 'admin@demo.com', passwordHash, 'ADMIN', true]
     );
 
-    console.log('Seeding completed successfully.');
+    if (result.rowCount === 0) {
+      console.log('admin existente');
+    } else {
+      console.log('admin criado');
+    }
+
+    console.log('seed concluído');
   } catch (err) {
     console.error('Error during seeding:', err);
   } finally {
