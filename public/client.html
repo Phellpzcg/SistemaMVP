@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <title>Área do Cliente</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <nav>
+    <span id="username"></span>
+    <button id="logout" style="float:right">Sair</button>
+  </nav>
+  <main>
+    <h1>Bem-vindo</h1>
+  </main>
+  <script>
+    async function load() {
+      const session = await fetch('/api/session');
+      if (!session.ok) {
+        window.location.href = '/login.html';
+        return;
+      }
+      const { user } = await session.json();
+      if (!user || user.role !== 'client') {
+        window.location.href = '/login.html';
+        return;
+      }
+      document.getElementById('username').textContent = user.username;
+    }
+    load();
+
+    document.getElementById('logout').addEventListener('click', async () => {
+      await fetch('/api/auth/logout', { method: 'POST' });
+      window.location.href = '/login.html';
+    });
+  </script>
+</body>
+</html>

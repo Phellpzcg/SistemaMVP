@@ -6,12 +6,13 @@ const router = express.Router();
 
 // Login endpoint
 router.post('/login', async (req, res) => {
-  const { email, password } = req.body;
+  const { login, password } = req.body;
 
   try {
-    const { rows } = await pool.query('SELECT * FROM users WHERE email = $1', [
-      email,
-    ]);
+    const { rows } = await pool.query(
+      'SELECT * FROM users WHERE email = $1 OR username = $1',
+      [login]
+    );
 
     const user = rows[0];
     if (!user) {
@@ -26,9 +27,9 @@ router.post('/login', async (req, res) => {
     req.session.user = {
       id: user.id,
       email: user.email,
-      // Placeholder properties to satisfy middleware expectations
-      is_active: true,
-      role: 'admin',
+      username: user.username,
+      is_active: user.is_active,
+      role: user.role,
     };
 
     res.json({ message: 'Logged in successfully' });

@@ -1,0 +1,16 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+nav {
+  background: #222;
+  color: #fff;
+  padding: 10px;
+}
+nav span {
+  font-weight: bold;
+}
+main {
+  padding: 20px;
+}

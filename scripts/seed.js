@@ -17,10 +17,12 @@ async function run() {
     const migration = fs.readFileSync(migrationPath, 'utf8');
     await pool.query(migration);
 
-    const passwordHash = await bcrypt.hash('Admin@123', 10);
+    const passwordHash = await bcrypt.hash('1234', 10);
     await pool.query(
-      'INSERT INTO users (email, password) VALUES ($1, $2) ON CONFLICT (email) DO NOTHING',
-      ['admin@demo.com', passwordHash]
+      `INSERT INTO users (email, username, password, role)
+       VALUES ($1, $2, $3, $4)
+       ON CONFLICT (email) DO NOTHING`,
+      ['filipeoliveira@example.com', 'filipeoliveira', passwordHash, 'admin']
     );
 
     console.log('Seeding completed successfully.');
