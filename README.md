@@ -20,7 +20,13 @@ DATABASE_URL=postgres://usuario:senha@host:porta/banco
 npm run seed
 ```
 
-4. Inicie o servidor de desenvolvimento:
+4. A tabela de sessões é criada automaticamente ao iniciar o servidor. O `connect-pg-simple` executa o arquivo `node_modules/connect-pg-simple/table.sql` para gerar a tabela caso ela não exista. Se preferir criar manualmente, rode:
+
+```bash
+psql mydatabase < node_modules/connect-pg-simple/table.sql
+```
+
+5. Inicie o servidor de desenvolvimento:
 
 ```bash
 npm run dev
