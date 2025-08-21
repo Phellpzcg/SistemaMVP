@@ -4,14 +4,24 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "node server.js",
+    "seed": "node scripts/seed.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
+    "bcrypt": "^6.0.0",
+    "connect-pg-simple": "^10.0.0",
+    "cors": "^2.8.5",
     "dotenv": "^17.2.1",
-    "pg": "^8.16.3"
+    "express": "^5.1.0",
+    "express-session": "^1.18.2",
+    "helmet": "^8.1.0",
+    "morgan": "^1.10.1",
+    "pg": "^8.16.3",
+    "uuid": "^11.1.0"
   }
 }
