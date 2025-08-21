@@ -3,10 +3,10 @@ function requireAuth(req, res, next) {
     return res.status(401).json({ message: 'Unauthorized' });
   }
 
-  const { is_active } = req.session.user;
-  if (!is_active) {
-    return res.status(403).json({ message: 'User inactive' });
-  }
+    const { is_active } = req.session.user;
+    if (!is_active) {
+      return res.status(403).json({ message: 'Acesso não liberado' });
+    }
 
   next();
 }

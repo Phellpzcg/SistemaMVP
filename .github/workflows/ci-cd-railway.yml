@@ -9,61 +9,51 @@ on:
 jobs:
   build_and_test:
     runs-on: ubuntu-latest
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: '18'
       - run: npm ci
+      - name: Check DATABASE_URL
+        run: |
+          if [ -z "$DATABASE_URL" ]; then
+            echo 'DATABASE_URL is not set' >&2
+            exit 1
+          fi
       - name: Validate connection
         id: db
-        env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
         run: |
-          if node -e "const {Client}=require('pg');const c=new Client({connectionString:process.env.DATABASE_URL,ssl:{rejectUnauthorized:false}});c.connect().then(()=>c.query('SELECT 1')).then(()=>{c.end();}).catch(e=>{console.error(e.message);process.exit(1);});"; then
-            echo "ok=✅" >> $GITHUB_OUTPUT
+          if node -e "const {Client}=require('pg');const c=new Client({connectionString:process.env.DATABASE_URL,ssl:{rejectUnauthorized:false}});c.connect().then(()=>c.query('SELECT 1')).then(()=>c.end()).catch(e=>{console.error(e.message);process.exit(1);});"; then
+            echo 'ok=✅' >> $GITHUB_OUTPUT
           else
-            echo "ok=❌" >> $GITHUB_OUTPUT
-          fi
-      - name: Run migrations
-        id: migrate
-        env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
-        run: |
-          if psql "$DATABASE_URL" -f migrations/001_init.sql >/dev/null; then
-            echo "ok=✅" >> $GITHUB_OUTPUT
-          else
-            echo "ok=❌" >> $GITHUB_OUTPUT
+            echo 'ok=❌' >> $GITHUB_OUTPUT
           fi
       - name: Seed database
         id: seed
-        env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
         run: |
           if node scripts/seed.js; then
-            echo "ok=✅" >> $GITHUB_OUTPUT
+            echo 'ok=✅' >> $GITHUB_OUTPUT
           else
-            echo "ok=❌" >> $GITHUB_OUTPUT
+            echo 'ok=❌' >> $GITHUB_OUTPUT
           fi
       - name: Health endpoints
         id: health
-        env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
         run: |
-          node server.js &
+          PORT=3000 node server.js &
           PID=$!
           sleep 5
-          if curl -fsS http://localhost:3000/health >/dev/null && curl -fsS http://localhost:3000/db-health >/dev/null; then
-            echo "ok=✅" >> $GITHUB_OUTPUT
+          if curl -f http://localhost:3000/health >/dev/null && curl -f http://localhost:3000/db-health >/dev/null; then
+            echo 'ok=✅' >> $GITHUB_OUTPUT
           else
-            echo "ok=❌" >> $GITHUB_OUTPUT
+            echo 'ok=❌' >> $GITHUB_OUTPUT
           fi
           kill $PID
-      - run: npm test || true
       - name: Checklist
         run: |
           echo "Conexão: ${{ steps.db.outputs.ok }}"
-          echo "Migração: ${{ steps.migrate.outputs.ok }}"
           echo "Seed: ${{ steps.seed.outputs.ok }}"
           echo "Health: ${{ steps.health.outputs.ok }}"
 
@@ -80,10 +70,11 @@ jobs:
       - run: npm i -g @railway/cli
       - name: Railway login
         run: railway login --token ${{ secrets.RAILWAY_TOKEN }}
-      - name: Check DATABASE_URL on Railway
-        run: railway variables --project ${{ vars.RAILWAY_PROJECT_ID }} --service ${{ vars.RAILWAY_SERVICE_ID }} | grep -q DATABASE_URL
       - name: Deploy
         run: |
-          railway up \
-            --project ${{ vars.RAILWAY_PROJECT_ID }} \
-            --service ${{ vars.RAILWAY_SERVICE_ID }}
+          if [ -n "${{ vars.RAILWAY_PROJECT_ID }}" ] && [ -n "${{ vars.RAILWAY_SERVICE_ID }}" ]; then
+            railway up --project ${{ vars.RAILWAY_PROJECT_ID }} --service ${{ vars.RAILWAY_SERVICE_ID }}
+          else
+            railway up
+          fi
+

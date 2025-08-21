@@ -27,15 +27,15 @@ router.post('/login', async (req, res) => {
     }
 
     if (!user.is_active) {
-      return res.status(403).json({ message: 'User inactive' });
+      return res.status(403).json({ message: 'Acesso não liberado' });
     }
 
     req.session.user = {
       id: user.id,
-      email: user.email,
       name: user.name,
-      is_active: user.is_active,
+      email: user.email,
       role: user.role,
+      is_active: user.is_active,
     };
 
     res.json({ message: 'Logged in successfully' });

@@ -12,7 +12,7 @@ async function run() {
 
   const pool = new Pool({
     connectionString,
-    ...(process.env.NODE_ENV === 'production'
+    ...(process.env.NODE_ENV !== 'development'
       ? { ssl: { rejectUnauthorized: false } }
       : {}),
   });

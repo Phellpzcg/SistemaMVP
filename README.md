@@ -2,37 +2,37 @@
 
 Projeto Node.js + Express utilizando PostgreSQL hospedado na Railway.
 
-## Configuração
+## Configuração local
 
-1. Instale as dependências:
+1. Defina `DATABASE_URL` do Railway em `.env` ou nas variáveis de ambiente.
+2. Instale as dependências:
 
 ```bash
 npm install
 ```
 
-2. Crie um arquivo `.env` na raiz com a URL do banco de dados PostgreSQL fornecida pelo Railway:
-
-```
-DATABASE_URL=postgresql://usuario:senha@host:porta/banco
-```
-
-3. Popule o banco de dados:
+3. Popule o banco:
 
 ```bash
 npm run seed
 ```
 
-4. A tabela de sessões é criada automaticamente ao iniciar o servidor. O `connect-pg-simple` executa o arquivo `node_modules/connect-pg-simple/table.sql` para gerar a tabela caso ela não exista. Se preferir criar manualmente, rode:
+4. Inicie o servidor:
 
 ```bash
-psql mydatabase < node_modules/connect-pg-simple/table.sql
+npm start
 ```
 
-5. Inicie o servidor de desenvolvimento:
+### Endpoints de teste
 
-```bash
-npm run dev
+```text
+GET /health    -> { ok: true }
+GET /db-health -> { db: 'up' }
 ```
+
+## CI/CD
+
+Pull requests validam build, conexão e endpoints. Push na branch `main` faz deploy via Railway CLI.
 
 ## Credenciais iniciais
 
