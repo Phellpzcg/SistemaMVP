@@ -22,11 +22,17 @@ app.use(express.urlencoded({ extended: true }));
 app.use(session({
   store: new pgSession({
     pool,
+    createTableIfMissing: true,
   }),
   secret: process.env.SESSION_SECRET || 'change_this_secret',
   resave: false,
   saveUninitialized: false,
   name: 'sid',
+  cookie: {
+    httpOnly: true,
+    sameSite: 'lax',
+    secure: process.env.NODE_ENV === 'production',
+  },
 }));
 
 app.use(express.static('public'));
