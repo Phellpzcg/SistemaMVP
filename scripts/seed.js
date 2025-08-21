@@ -19,10 +19,10 @@ async function run() {
 
     const passwordHash = await bcrypt.hash('1234', 10);
     await pool.query(
-      `INSERT INTO users (email, username, password, role)
-       VALUES ($1, $2, $3, $4)
+      `INSERT INTO users (name, email, password_hash, role, is_active)
+       VALUES ($1, $2, $3, $4, $5)
        ON CONFLICT (email) DO NOTHING`,
-      ['filipeoliveira@example.com', 'filipeoliveira', passwordHash, 'admin']
+      ['filipeoliveira', 'filipeoliveira@example.com', passwordHash, 'ADMIN', true]
     );
 
     console.log('Seeding completed successfully.');

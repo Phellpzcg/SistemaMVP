@@ -8,7 +8,7 @@
 </head>
 <body>
   <nav>
-    <span id="username"></span>
+    <span id="name"></span>
     <button id="logout" style="float:right">Sair</button>
   </nav>
   <main>
@@ -23,11 +23,11 @@
         return;
       }
       const { user } = await session.json();
-      if (!user || user.role !== 'admin') {
+      if (!user || user.role !== 'ADMIN') {
         window.location.href = '/login.html';
         return;
       }
-      document.getElementById('username').textContent = user.username;
+      document.getElementById('name').textContent = user.name;
 
       const res = await fetch('/api/users');
       if (res.ok) {
@@ -35,7 +35,7 @@
         const list = document.getElementById('user-list');
         users.forEach(u => {
           const li = document.createElement('li');
-          li.textContent = `${u.username} (${u.email}) - ${u.role}`;
+          li.textContent = `${u.name} (${u.email}) - ${u.role}`;
           list.appendChild(li);
         });
       }

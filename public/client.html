@@ -8,7 +8,7 @@
 </head>
 <body>
   <nav>
-    <span id="username"></span>
+    <span id="name"></span>
     <button id="logout" style="float:right">Sair</button>
   </nav>
   <main>
@@ -22,11 +22,11 @@
         return;
       }
       const { user } = await session.json();
-      if (!user || user.role !== 'client') {
+      if (!user || user.role !== 'CLIENT') {
         window.location.href = '/login.html';
         return;
       }
-      document.getElementById('username').textContent = user.username;
+      document.getElementById('name').textContent = user.name;
     }
     load();
 
