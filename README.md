@@ -36,5 +36,5 @@ npm run dev
 
 Após rodar o seed, é criado um usuário administrador padrão.
 
-- **E-mail:** `admin@admin.com`
-- **Senha:** `admin123`
+- **E-mail:** `admin@demo.com`
+- **Senha:** `Admin@123`
