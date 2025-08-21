@@ -24,6 +24,10 @@ router.post('/login', async (req, res) => {
       return res.status(401).json({ message: 'Invalid credentials' });
     }
 
+    if (!user.is_active) {
+      return res.status(403).json({ message: 'User inactive' });
+    }
+
     req.session.user = {
       id: user.id,
       email: user.email,
