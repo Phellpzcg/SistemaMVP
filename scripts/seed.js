@@ -1,0 +1,34 @@
+const fs = require('fs');
+const path = require('path');
+const bcrypt = require('bcrypt');
+const { Pool } = require('pg');
+require('dotenv').config();
+
+async function run() {
+  const connectionString = process.env.DATABASE_URL;
+  if (!connectionString) {
+    throw new Error('DATABASE_URL is not set');
+  }
+
+  const pool = new Pool({ connectionString });
+
+  try {
+    const migrationPath = path.join(__dirname, '..', 'migrations', '001_init.sql');
+    const migration = fs.readFileSync(migrationPath, 'utf8');
+    await pool.query(migration);
+
+    const passwordHash = await bcrypt.hash('Admin@123', 10);
+    await pool.query(
+      'INSERT INTO users (email, password) VALUES ($1, $2) ON CONFLICT (email) DO NOTHING',
+      ['admin@demo.com', passwordHash]
+    );
+
+    console.log('Seeding completed successfully.');
+  } catch (err) {
+    console.error('Error during seeding:', err);
+  } finally {
+    await pool.end();
+  }
+}
+
+run();
