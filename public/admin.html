@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <title>Administração</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <nav>
+    <span id="user-name"></span>
+    <button id="logout">Sair</button>
+  </nav>
+  <div class="container">
+    <form id="create-form">
+      <input type="text" id="new-username" placeholder="Usuário" required>
+      <input type="text" id="new-email" placeholder="Email" required>
+      <input type="password" id="new-password" placeholder="Senha" required>
+      <button type="submit">Criar</button>
+    </form>
+    <table id="users">
+      <thead><tr><th>Usuário</th><th>Email</th><th>Ações</th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </div>
+  <script src="common.js"></script>
+  <script src="admin.js"></script>
+</body>
+</html>

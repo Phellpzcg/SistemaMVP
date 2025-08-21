@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <title>Login</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <nav><span>Login</span></nav>
+  <div class="container">
+    <form id="login-form">
+      <input type="text" id="username" placeholder="Usuário" required>
+      <input type="password" id="password" placeholder="Senha" required>
+      <button type="submit">Entrar</button>
+    </form>
+  </div>
+  <script>
+  document.getElementById('login-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const username = document.getElementById('username').value;
+    const password = document.getElementById('password').value;
+    const res = await fetch('/api/auth/login', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({username, password})
+    });
+    if(res.ok){
+      const data = await res.json();
+      if(data.user && data.user.role === 'admin')
+        window.location.href = 'admin.html';
+      else
+        window.location.href = 'app.html';
+    }else{
+      alert('Login inválido');
+    }
+  });
+  </script>
+</body>
+</html>
