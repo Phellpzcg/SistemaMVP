@@ -7,7 +7,9 @@ const router = express.Router();
 // List all users - only accessible to authenticated admins
 router.get('/', requireRole('admin'), async (req, res) => {
   try {
-    const { rows } = await pool.query('SELECT id, email FROM users');
+    const { rows } = await pool.query(
+      'SELECT id, email, username, role, is_active FROM users'
+    );
     res.json(rows);
   } catch (err) {
     console.error(err);
