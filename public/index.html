@@ -60,4 +60,50 @@
     footer{ margin:30px 0 8px; color:var(--muted); font-size:14px; text-align:center; }
     code{ background: rgba(127,127,127,.15); padding:2px 6px; border-radius:6px; }
   </style>
-<
+</head>
+<body>
+  <div class="container">
+    <header>
+      <a class="brand" href="/">
+        <div class="logo"></div>
+        <span>MVP</span>
+      </a>
+      <nav>
+        <a href="/dashboard">Dashboard</a>
+        <a href="/login">Login</a>
+      </nav>
+    </header>
+
+    <section class="hero">
+      <h1>Gestão de Processos Simplificada</h1>
+      <p class="lead">Administre prazos e documentos do seu escritório de contabilidade.</p>
+      <div class="actions">
+        <a class="btn" href="/register">Criar conta</a>
+        <a class="btn secondary" href="/login">Entrar</a>
+      </div>
+    </section>
+
+    <div class="grid">
+      <div class="card">
+        <h3>Controle de Prazos</h3>
+        <p>Acompanhe datas importantes e receba lembretes.</p>
+      </div>
+      <div class="card">
+        <h3>Organização de Documentos</h3>
+        <p>Mantenha arquivos do cliente sempre acessíveis.</p>
+      </div>
+      <div class="card">
+        <h3>Colaboração</h3>
+        <p>Compartilhe tarefas e acompanhe o progresso da equipe.</p>
+      </div>
+    </div>
+
+    <footer>
+      &copy; <span id="year"></span> MVP. Feito com <code>Node.js</code>.
+    </footer>
+  </div>
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
