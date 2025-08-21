@@ -10,7 +10,7 @@ router.post('/login', async (req, res) => {
 
   try {
     const { rows } = await pool.query(
-      'SELECT * FROM users WHERE email = $1 OR username = $1',
+      'SELECT * FROM users WHERE email = $1 OR name = $1',
       [login]
     );
 
@@ -19,7 +19,7 @@ router.post('/login', async (req, res) => {
       return res.status(401).json({ message: 'Invalid credentials' });
     }
 
-    const isValid = await bcrypt.compare(password, user.password);
+    const isValid = await bcrypt.compare(password, user.password_hash);
     if (!isValid) {
       return res.status(401).json({ message: 'Invalid credentials' });
     }
@@ -27,7 +27,7 @@ router.post('/login', async (req, res) => {
     req.session.user = {
       id: user.id,
       email: user.email,
-      username: user.username,
+      name: user.name,
       is_active: user.is_active,
       role: user.role,
     };

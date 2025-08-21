@@ -12,7 +12,7 @@
     <h1>Entrar</h1>
     <form id="login-form">
       <label>
-        E-mail ou usuário:
+        E-mail ou nome:
         <input type="text" name="login" required />
       </label>
       <br />
@@ -31,7 +31,7 @@
       if (res.ok) {
         const { user } = await res.json();
         if (user) {
-          window.location.href = user.role === 'admin' ? '/admin.html' : '/client.html';
+          window.location.href = user.role === 'ADMIN' ? '/admin.html' : '/client.html';
         }
       }
     }
@@ -52,7 +52,7 @@
       if (res.ok) {
         const session = await fetch('/api/session');
         const { user } = await session.json();
-        window.location.href = user.role === 'admin' ? '/admin.html' : '/client.html';
+        window.location.href = user.role === 'ADMIN' ? '/admin.html' : '/client.html';
       } else {
         const msg = await res.json();
         document.getElementById('error').textContent = msg.message || 'Erro no login';
