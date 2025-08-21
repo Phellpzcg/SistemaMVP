@@ -43,6 +43,19 @@ app.get('/api/session', (req, res) => {
   }
 });
 
+app.get('/health', (req, res) => {
+  res.json({ ok: true });
+});
+
+app.get('/db-health', async (req, res) => {
+  try {
+    await pool.query('SELECT 1');
+    res.json({ db: 'up' });
+  } catch (err) {
+    res.status(500).json({ db: 'down' });
+  }
+});
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server listening on port ${PORT}`);
